@@ -63,8 +63,6 @@ export const getStudentsByCourse = createAsyncThunk(
   }
 );
 
-// MARK STUDENT VIEWED
-// MARK STUDENT VIEWED - FIXED VERSION
 export const markStudentViewed = createAsyncThunk(
   'students/markStudentViewed',
   async (id, { rejectWithValue, dispatch }) => {
@@ -72,20 +70,20 @@ export const markStudentViewed = createAsyncThunk(
       const response = await authFetch.patch(`/clients/student/viewed/${id}`);
       
       if (response.data.success) {
-        // ✅ IMPORTANT: Refresh stats and students after marking viewed
+      
         await dispatch(getDomainStats());
         await dispatch(getAllStudents());
-        toast.success('Student marked as viewed');
+        
+       
         return { success: true, id };
       }
       return rejectWithValue('Failed to mark viewed');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to mark viewed');
       return rejectWithValue(error.response?.data?.message || 'Failed to mark viewed');
     }
   }
 );
-// MARK COURSE VIEWED
+
 export const markCourseViewed = createAsyncThunk(
   'students/markCourseViewed',
   async (course, { rejectWithValue }) => {
@@ -98,15 +96,14 @@ export const markCourseViewed = createAsyncThunk(
   }
 );
 
-// UPDATE STUDENT STATUS
+
 export const updateStudentStatus = createAsyncThunk(
   'students/updateStudentStatus',
   async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await authFetch.patch(`/clients/${id}/status`, { status });
       
-      if (response.data.success) {
-        toast.success('Status updated successfully');
+      if (response.data.success) {  
         return response.data;
       }
       return rejectWithValue('Update failed');

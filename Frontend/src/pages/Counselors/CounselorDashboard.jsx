@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ScrollToTop from "../../components/ScrollToTop.jsx";
 import { toast } from "react-toastify";
+
 import {
   Stethoscope,
   Pill,
@@ -57,6 +58,18 @@ import {
   getTodayVisitors,
 } from "../../Redux-toolkit/features/visitorThunks.js";
 
+const useAfterRender = (callback, dependencies) => {
+  useEffect(() => {
+    if (dependencies.every(dep => dep !== undefined && dep !== null)) {
+      requestAnimationFrame(() => {
+        queueMicrotask(() => {
+          callback();
+        });
+      });
+    }
+  }, dependencies);
+};
+
 const domainData = {
   MEDICAL: ["MBBS", "BAMS", "BHMS", "BNYS"],
   PHARMACY: ["B.Pharma", "D.Pharma", "M.Pharma", "Pharm D", "PhD Pharmacy"],
@@ -87,7 +100,7 @@ const domainData = {
 const CounselorDashboard = () => {
   const dispatch = useDispatch();
 
-  // --- REDUX STATE ---
+
   const studentState = useSelector((state) => state.students);
   const visitorState = useSelector(
     (state) =>
@@ -103,7 +116,6 @@ const CounselorDashboard = () => {
   const [displayStudents, setDisplayStudents] = useState([]);
   const [viewTitle, setViewTitle] = useState("");
 
-  // FIXED: Safely access stats with fallbacks
   const domainStats = stats?.domain || [];
   const courseStats = stats?.course || [];
   const overallStats = stats?.overall || {
@@ -113,7 +125,7 @@ const CounselorDashboard = () => {
     completed: 0,
   };
 
-  // --- LOCAL UI STATE ---
+
   const [selectedDomain, setSelectedDomain] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -121,7 +133,7 @@ const CounselorDashboard = () => {
   const [exporting, setExporting] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Domain Metadata for UI Icons and Descriptions
+ 
   const counselorDomains = [
     {
       id: 1,
@@ -221,7 +233,7 @@ const CounselorDashboard = () => {
     },
   ];
 
-  // FIXED: Refresh all data function
+
   const refreshAllData = useCallback(async () => {
     try {
       await dispatch(getAllStudents()).unwrap();
@@ -233,43 +245,42 @@ const CounselorDashboard = () => {
     }
   }, [dispatch]);
 
-  // ✅ FIXED: Initial data fetch
-  useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        await dispatch(getAllStudents()).unwrap();
-        await dispatch(getDomainStats()).unwrap();
-        await dispatch(trackPageVisit()).unwrap();
-        await dispatch(getVisitorStats()).unwrap();
-        await dispatch(getTodayVisitors()).unwrap();
-        console.log("✅ All data fetched successfully");
-      } catch (error) {
-        console.error("❌ Error fetching data:", error);
-      }
-    };
+useEffect(() => {
+  const fetchAllData = async () => {
+    try {
+      await dispatch(getAllStudents()).unwrap();
+      await dispatch(getDomainStats()).unwrap();
 
-    fetchAllData();
+      await dispatch(getVisitorStats()).unwrap();
+      await dispatch(getTodayVisitors()).unwrap();
+      console.log("✅ All data fetched successfully");
+    } catch (error) {
+      console.error("❌ Error fetching data:", error);
+    }
+  };
 
-    const interval = setInterval(
-      () => {
-        dispatch(getVisitorStats());
-        dispatch(getTodayVisitors());
-      },
-      5 * 60 * 1000,
-    );
+  fetchAllData();
 
-    return () => clearInterval(interval);
-  }, [dispatch]);
+  const interval = setInterval(
+    () => {
+      dispatch(getVisitorStats());
+      dispatch(getTodayVisitors());
+    },
+    5 * 60 * 1000,
+  );
 
-  // --- FIXED: Student new status checker ---
+  return () => clearInterval(interval);
+}, [dispatch]);
+
+
   const isStudentNew = (student) => {
     if (!student) return false;
-    // Agar studentViewed true hai to new nahi hai
+
     if (student.studentViewed === true) return false;
-    // Agar isNew flag false hai to new nahi hai
+
     if (student.isNew === false) return false;
 
-    // Agar newAt date hai to 7 days check karo
+   
     if (student.newAt) {
       const newAt = new Date(student.newAt);
       const now = new Date();
@@ -280,12 +291,12 @@ const CounselorDashboard = () => {
     return false;
   };
 
-  // FIXED: Handle domain click
+  
   const handleDomainClick = (domainName) => {
     setSelectedDomain({ name: domainName });
     setSelectedCourse(null);
 
-    // Get students for this domain from allStudents
+ 
     const domainStudents =
       allStudents?.filter((s) => s.domain === domainName) || [];
     setDisplayStudents(domainStudents);
@@ -293,7 +304,7 @@ const CounselorDashboard = () => {
     setCurrentView("clients");
   };
 
-  // FIXED: Handle status click (New, In Progress, Completed)
+
   const handleStatusClick = (type) => {
     let data = [];
     if (type === "new") {
@@ -311,16 +322,14 @@ const CounselorDashboard = () => {
     setCurrentView("clients");
   };
 
-  // FIXED: Handle course click
   const handleCourseClick = async (course) => {
     try {
       if (course.hasNew) {
         await dispatch(markCourseViewed(course.course)).unwrap();
-        await refreshAllData(); // Refresh after marking viewed
+        await refreshAllData();
       }
       setSelectedCourse(course);
 
-      // Get students for this course
       const courseStudents =
         allStudents?.filter((s) => s.course === course.course) || [];
       setDisplayStudents(courseStudents);
@@ -330,32 +339,40 @@ const CounselorDashboard = () => {
     }
   };
 
-  const handleClientClick = async (client) => {
-    try {
-      if (isStudentNew(client)) {
-        const loadingToast = toast.loading("Marking as viewed...");
+ const handleClientClick = async (client) => {
+  try {
+    if (isStudentNew(client)) {
+      const loadingToast = toast.loading("Marking as viewed...");  // 👈 ADD THIS
 
-        await dispatch(markStudentViewed(client._id)).unwrap();
+      await dispatch(markStudentViewed(client._id)).unwrap();
 
-        toast.dismiss(loadingToast);
+      toast.dismiss(loadingToast);
+      await refreshAllData();
 
-        await refreshAllData();
-
-        const updatedClient =
-          allStudents?.find((s) => s._id === client._id) || client;
-        setSelectedClient({ ...updatedClient, studentViewed: true });
-      } else {
-        setSelectedClient(client);
-      }
-
+      const updatedClient =
+        allStudents?.find((s) => s._id === client._id) || client;
+      setSelectedClient(updatedClient);
       setCurrentView("clientDetail");
-    } catch (error) {
-      console.error("Client click error:", error);
-      toast.error("Failed to mark student as viewed");
+
+      // ✅ RENDER KE BAAD TOAST
+      useAfterRender(() => {
+        toast.success("Student marked as viewed");
+      }, [currentView, selectedClient?._id]);
+      
+    } else {
       setSelectedClient(client);
       setCurrentView("clientDetail");
     }
-  };
+  } catch (error) {
+    console.error("Client click error:", error);
+    useAfterRender(() => {
+      toast.error(error || "Failed to mark student as viewed");
+    }, [currentView, selectedClient?._id]);
+    
+    setSelectedClient(client);
+    setCurrentView("clientDetail");
+  }
+};
 
   const deleteClientHandler = async (clientId) => {
     try {
@@ -384,24 +401,38 @@ const CounselorDashboard = () => {
     }
   };
 
-  const updateClientStatusHandler = async (clientId, status) => {
-    try {
-      const loadingToast = toast.loading("Updating status...");
+const updateClientStatusHandler = async (clientId, status) => {
+  try {
+    
+    setSelectedClient(prev => ({
+      ...prev,
+      status: status
+    }));
 
-      const result = await dispatch(
-        updateStudentStatus({ id: clientId, status }),
-      ).unwrap();
+    setDisplayStudents(prev => 
+      prev.map(s => s._id === clientId ? { ...s, status } : s)
+    );
 
-      toast.dismiss(loadingToast);
+    // ✅ STEP 2: TURANT TOAST - 0 DELAY!
+    toast.success("Status updated successfully!");  // 👈 TURANT TOAST!
 
-      await refreshAllData();
+    // ✅ STEP 3: Background mein API call
+    const result = await dispatch(
+      updateStudentStatus({ id: clientId, status }),
+    ).unwrap();
 
-      const clientObj = result.client || result;
-      setSelectedClient(clientObj);
-    } catch (err) {
-      toast.error(err || "Failed to update status");
-    }
-  };
+    // Background refresh
+    refreshAllData();
+    
+  } catch (err) {
+    console.error("Status update failed:", err);
+    
+ 
+    toast.error("Failed to update status");
+    
+    await refreshAllData();
+  }
+};
 
   const exportToExcel = async () => {
     try {
@@ -589,7 +620,6 @@ const CounselorDashboard = () => {
           </div>
         </div>
 
-        {/* Banner Section */}
         <div className="bg-gradient-to-r from-slate-900 to-blue-900 rounded-3xl p-8 mb-10 text-white shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-800/20 rounded-full -translate-y-32 translate-x-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-800/20 rounded-full translate-y-24 -translate-x-24"></div>
@@ -610,23 +640,8 @@ const CounselorDashboard = () => {
             </div>
             <div className="flex flex-col items-end gap-3">
               <div className="flex items-center gap-3">
-                <Tooltip text="Refresh Data" placement="top">
-                  <button
-                    onClick={handleManualRefresh}
-                    disabled={refreshing}
-                    className={`p-3 rounded-xl bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all ${refreshing ? "animate-spin" : ""}`}
-                  >
-                    <RefreshCcw size={20} />
-                  </button>
-                </Tooltip>
-                <Tooltip text="Hard Refresh" placement="top">
-                  <button
-                    onClick={handlePageRefresh}
-                    className="p-3 rounded-xl bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all"
-                  >
-                    <RefreshCw size={20} />
-                  </button>
-                </Tooltip>
+                <Tooltip text="Refresh Data" placement="top"></Tooltip>
+                <Tooltip text="Hard Refresh" placement="top"></Tooltip>
                 <Tooltip
                   text={
                     isDashboardEmpty
@@ -645,7 +660,7 @@ const CounselorDashboard = () => {
                     }`}
                   >
                     <FileSpreadsheet size={18} />
-                    {exporting ? "Exporting..." : "Export Data"}
+                    {exporting ? "Exporting..." : "Get All Students Data"}
                   </button>
                 </Tooltip>
               </div>

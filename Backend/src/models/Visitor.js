@@ -9,14 +9,10 @@ const visitorSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    default: null
-  },
-  page: {
+  deviceType: {
     type: String,
-    default: '/counselor-dashboard'
+    enum: ['mobile', 'tablet', 'desktop', 'bot', 'unknown'],
+    default: 'unknown'
   },
   visitedAt: {
     type: Date,
@@ -28,8 +24,7 @@ const visitorSchema = new mongoose.Schema({
   }
 });
 
-// IMPORTANT: Unique index - Ek IP ek din mein sirf ek baar
+// ✅ Unique visitor per day (same IP same day = 1)
 visitorSchema.index({ ip: 1, date: 1 }, { unique: true });
 
-const Visitor = mongoose.model('Visitor', visitorSchema);
-module.exports = Visitor;
+module.exports = mongoose.model('Visitor', visitorSchema);

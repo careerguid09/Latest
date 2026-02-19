@@ -34,18 +34,14 @@ import countries from "world-countries";
 import { createStudent } from "../Redux-toolkit/features/studentsThunks";
 import { useDispatch } from "react-redux";
 
-
 const countriesData = countries
   .map((c) => ({
     name: c.name.common,
     code: `${c.idd.root || ""}${c.idd.suffixes?.[0] || ""}`,
     flag: c.flag,
   }))
-  .filter(c => c.code && c.code !== "undefined")
+  .filter((c) => c.code && c.code !== "undefined")
   .sort((a, b) => a.name.localeCompare(b.name));
-
-
-
 
 // --- SEARCHABLE SELECT COMPONENT ---
 const SearchableSelect = ({
@@ -99,10 +95,11 @@ const SearchableSelect = ({
       )}
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`w-full px-4 py-3 rounded-lg border flex items-center justify-between cursor-pointer transition-all ${disabled
+        className={`w-full px-4 py-3 rounded-lg border flex items-center justify-between cursor-pointer transition-all ${
+          disabled
             ? "bg-gray-50 border-gray-100 opacity-50"
             : "bg-white border-gray-200 hover:border-blue-500"
-          } ${isOpen ? "ring-2 ring-blue-500 border-blue-500" : ""}`}
+        } ${isOpen ? "ring-2 ring-blue-500 border-blue-500" : ""}`}
       >
         <div className="flex items-center gap-2 truncate">
           {Icon && <Icon className="w-4 h-4 text-gray-400" />}
@@ -137,9 +134,7 @@ const SearchableSelect = ({
               {filteredOptions.length > 0 ? (
                 filteredOptions.map((opt) => {
                   const isString = typeof opt === "string";
-                  const labelStr = isString
-                    ? opt
-                    : `${opt.name} (${opt.code})`;
+                  const labelStr = isString ? opt : `${opt.name} (${opt.code})`;
                   const valStr = isString ? opt : opt.code;
 
                   return (
@@ -207,9 +202,7 @@ const Toast = ({ message, type = "success", onClose, progress = 100 }) => {
       className={`relative overflow-hidden rounded-lg shadow-lg ${colors[type]} border`}
     >
       <div className="px-4 py-3 flex items-start gap-3 text-white">
-        <div className="flex-shrink-0">
-          {icons[type]}
-        </div>
+        <div className="flex-shrink-0">{icons[type]}</div>
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-sm mb-1">{title[type]}</div>
           <div className="text-sm">{message}</div>
@@ -229,76 +222,45 @@ const Toast = ({ message, type = "success", onClose, progress = 100 }) => {
 
 const Contact = () => {
   const dispatch = useDispatch();
- const domainData = {
-  MEDICAL: ["MBBS", "BAMS", "BHMS", "BNYS"],
+  const domainData = {
+    MEDICAL: ["MBBS", "BAMS", "BHMS", "BNYS"],
 
-  PHARMACY: [
-    "B.Pharma",
-    "D.Pharma",
-    "M.Pharma",
-    "Pharm D",
-    "PhD Pharmacy"
-  ],
+    PHARMACY: ["B.Pharma", "D.Pharma", "M.Pharma", "Pharm D", "PhD Pharmacy"],
 
-  NURSING: [
-    "ANM",
-    "GNM",
-    "BSc Nursing",
-    "MSc Nursing",
-    "Post Basic Nursing"
-  ],
+    NURSING: ["ANM", "GNM", "BSc Nursing", "MSc Nursing", "Post Basic Nursing"],
 
-  PARAMEDICAL: [
-    "X-Ray Technician (Radiology)",
-    "BMLT",
-    "DMLT",
-    "BPT",
-    "MPT",
-    "Bachelor of Human Nutrition"
-  ],
+    PARAMEDICAL: [
+      "X-Ray Technician (Radiology)",
+      "BMLT",
+      "DMLT",
+      "BPT",
+      "MPT",
+      "Bachelor of Human Nutrition",
+    ],
 
-  ENGINEERING: [
-    "Diploma Engineering",
-    "B.Tech",
-    "BE",
-    "M.Tech",
-    "ME",
-    "PhD Engineering"
-  ],
+    ENGINEERING: [
+      "Diploma Engineering",
+      "B.Tech",
+      "BE",
+      "M.Tech",
+      "ME",
+      "PhD Engineering",
+    ],
 
-  MANAGEMENT: ["BBA", "MBA", "PGDM"],
+    MANAGEMENT: ["BBA", "MBA", "PGDM"],
 
-  GRADUATION: ["BA", "BSc", "BCom"],
+    GRADUATION: ["BA", "BSc", "BCom"],
 
-  POST_GRADUATION: ["MA", "MSc", "MCom"],
+    POST_GRADUATION: ["MA", "MSc", "MCom"],
 
-  VOCATIONAL_COURSES: [
-    "BCA",
-    "MCA",
-    "PGDCA",
-    "B.Lib",
-    "M.Lib"
-  ],
+    VOCATIONAL_COURSES: ["BCA", "MCA", "PGDCA", "B.Lib", "M.Lib"],
 
-  LANGUAGE_COURSES: [
-    "German",
-    "French",
-    "Italian",
-    "Chinese"
-  ],
+    LANGUAGE_COURSES: ["German", "French", "Italian", "Chinese"],
 
-  AGRICULTURE: [
-    "BSc Agriculture",
-    "MSc Agriculture"
-  ],
+    AGRICULTURE: ["BSc Agriculture", "MSc Agriculture"],
 
-  EDUCATION_COURSES: [
-    "B.Ed",
-    "D.El.Ed",
-    "CTET Guidance",
-    "STET Guidance"
-  ]
-};
+    EDUCATION_COURSES: ["B.Ed", "D.El.Ed", "CTET Guidance", "STET Guidance"],
+  };
 
   const eduLevels = [
     "High School (10th)",
@@ -317,7 +279,7 @@ const Contact = () => {
     googleMaps: "https://maps.app.goo.gl/XnW6DUaLRCxb1ymbA",
     instagram: "https://www.instagram.com/ss_admission_wala",
     facebook: "https://www.facebook.com/profile.php?id=61587254466624",
-    youtube: "https://www.youtube.com/@SSADMISSIONVALA"
+    youtube: "https://www.youtube.com/@SSADMISSIONVALA",
   };
 
   // --- STATE ---
@@ -465,8 +427,7 @@ const Contact = () => {
   //   }
   // };
 
-
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.phone.length < 10) {
@@ -494,7 +455,7 @@ const handleSubmit = async (e) => {
 
       toast.dismiss(loadingToastId);
       setIsSubmitted(true);
-      
+
       // Reset form
       setFormData({
         fullName: "",
@@ -522,10 +483,12 @@ const handleSubmit = async (e) => {
     }
   };
 
-
   const openWhatsApp = () => {
     const message = `Hello SS Admission Wala, I'm interested in career counseling.`;
-    window.open(`https://wa.me/${contactInfo.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(
+      `https://wa.me/${contactInfo.whatsapp}?text=${encodeURIComponent(message)}`,
+      "_blank",
+    );
   };
 
   return (
@@ -555,8 +518,6 @@ const handleSubmit = async (e) => {
           <MessageSquare className="w-5 h-5 text-white" />
         </motion.button>
 
-
-
         {/* Main Content */}
         <section className="py-12">
           <div className="container mx-auto px-6">
@@ -570,7 +531,9 @@ const handleSubmit = async (e) => {
                   viewport={{ once: true }}
                   className="bg-white rounded-xl border border-gray-200 p-6"
                 >
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">Contact Information</h2>
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">
+                    Contact Information
+                  </h2>
 
                   <div className="space-y-4">
                     {/* Phone */}
@@ -582,8 +545,12 @@ const handleSubmit = async (e) => {
                         <PhoneCall className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-500">Phone</p>
-                        <p className="font-semibold text-gray-900">{contactInfo.phone}</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Phone
+                        </p>
+                        <p className="font-semibold text-gray-900">
+                          {contactInfo.phone}
+                        </p>
                       </div>
                     </a>
 
@@ -596,8 +563,12 @@ const handleSubmit = async (e) => {
                         <MessageSquare className="w-5 h-5 text-green-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-500">WhatsApp</p>
-                        <p className="font-semibold text-gray-900">{contactInfo.phone}</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          WhatsApp
+                        </p>
+                        <p className="font-semibold text-gray-900">
+                          {contactInfo.phone}
+                        </p>
                         <span className="text-xs text-green-600 mt-1 inline-flex items-center gap-1">
                           <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                           Online Now
@@ -614,8 +585,12 @@ const handleSubmit = async (e) => {
                         <Mail className="w-5 h-5 text-purple-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-500">Email</p>
-                        <p className="font-semibold text-gray-900 truncate">{contactInfo.email}</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Email
+                        </p>
+                        <p className="font-semibold text-gray-900 truncate">
+                          {contactInfo.email}
+                        </p>
                       </div>
                     </a>
 
@@ -630,8 +605,12 @@ const handleSubmit = async (e) => {
                         <MapIcon className="w-5 h-5 text-orange-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-500">Office Address</p>
-                        <p className="font-semibold text-gray-900">{contactInfo.address}</p>
+                        <p className="text-sm font-medium text-gray-500">
+                          Office Address
+                        </p>
+                        <p className="font-semibold text-gray-900">
+                          {contactInfo.address}
+                        </p>
                         <div className="flex items-center gap-1 mt-1 text-blue-600 text-sm">
                           <ExternalLink className="w-3 h-3" />
                           <span>View on Maps</span>
@@ -642,7 +621,9 @@ const handleSubmit = async (e) => {
 
                   {/* Social Links */}
                   <div className="mt-8 pt-6 border-t border-gray-100">
-                    <p className="text-sm font-medium text-gray-500 mb-3">Follow Us</p>
+                    <p className="text-sm font-medium text-gray-500 mb-3">
+                      Follow Us
+                    </p>
                     <div className="flex gap-2">
                       <a
                         href={contactInfo.instagram}
@@ -688,10 +669,12 @@ const handleSubmit = async (e) => {
                           <GraduationCap className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-sm opacity-90">Students Guided</div>
+                          <div className="text-sm opacity-90">
+                            Students Guided
+                          </div>
                           <div className="text-xl font-bold">15,000+</div>
                         </div>
-                      </div>  
+                      </div>
                     </div>
                     <div className="flex items-center justify-between pb-3 border-b border-blue-500/30">
                       <div className="flex items-center gap-3">
@@ -710,7 +693,9 @@ const handleSubmit = async (e) => {
                           <Users className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="text-sm opacity-90">Expert Counselors</div>
+                          <div className="text-sm opacity-90">
+                            Expert Counselors
+                          </div>
                           <div className="text-xl font-bold">15+</div>
                         </div>
                       </div>
@@ -756,7 +741,9 @@ const handleSubmit = async (e) => {
                         <div className="bg-green-50 border border-green-200 p-4 rounded-lg flex items-center gap-3">
                           <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
                           <div>
-                            <h4 className="font-semibold text-green-900">Request Submitted Successfully!</h4>
+                            <h4 className="font-semibold text-green-900">
+                              Request Submitted Successfully!
+                            </h4>
                             <p className="text-green-700 text-sm mt-1">
                               Our counselor will contact you within 24 hours.
                             </p>
@@ -770,7 +757,9 @@ const handleSubmit = async (e) => {
                   <form onSubmit={handleSubmit} className="space-y-8">
                     {/* Section 1: Personal Details */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Personal Information
+                      </h3>
                       <div className="grid md:grid-cols-2 gap-4">
                         {/* Full Name */}
                         <div className="space-y-2">
@@ -794,7 +783,8 @@ const handleSubmit = async (e) => {
                         {/* Email */}
                         <div className="space-y-2">
                           <label className="text-sm font-medium text-gray-700">
-                            Email Address <span className="text-red-500">*</span>
+                            Email Address{" "}
+                            <span className="text-red-500">*</span>
                           </label>
                           <div className="relative">
                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -810,77 +800,186 @@ const handleSubmit = async (e) => {
                           </div>
                         </div>
 
-{/* Phone Number - FIXED */}
-<div className="space-y-2 md:col-span-2">
-  <label className="text-sm font-medium text-gray-700">
-    Phone Number <span className="text-red-500">*</span>
-  </label>
-  <div className="flex flex-col sm:flex-row gap-3">
-    {/* Country Code Select */}
-    <div className="w-full sm:w-40">
-      <select
-        value={formData.countryCode}  // ✅ Yehi sufficient hai
-        onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-        className="w-full px-3 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
-        required
-      >
-        <option value="">Code *</option>
-        <option value="+1">🇺🇸 +1 (USA)</option>
-        <option value="+44">🇬🇧 +44 (UK)</option>
-        <option value="+91">🇮🇳 +91 (India)</option>
-        <option value="+61">🇦🇺 +61 (Australia)</option>
-        <option value="+81">🇯🇵 +81 (Japan)</option>
-        <option value="+86">🇨🇳 +86 (China)</option>
-        <option value="+49">🇩🇪 +49 (Germany)</option>
-        <option value="+33">🇫🇷 +33 (France)</option>
-        <option value="+55">🇧🇷 +55 (Brazil)</option>
-        <option value="+7">🇷🇺 +7 (Russia)</option>
-        <option value="+971">🇦🇪 +971 (UAE)</option>
-        <option value="+966">🇸🇦 +966 (Saudi Arabia)</option>
-        <option value="+92">🇵🇰 +92 (Pakistan)</option>
-        <option value="+94">🇱🇰 +94 (Sri Lanka)</option>
-        <option value="+880">🇧🇩 +880 (Bangladesh)</option>
-        <option value="+60">🇲🇾 +60 (Malaysia)</option>
-        <option value="+65">🇸🇬 +65 (Singapore)</option>
-        <option value="+62">🇮🇩 +62 (Indonesia)</option>
-        <option value="+63">🇵🇭 +63 (Philippines)</option>
-        <option value="+66">🇹🇭 +66 (Thailand)</option>
-        <option value="+84">🇻🇳 +84 (Vietnam)</option>
-      </select>
-    </div>
-    
-    {/* Phone Number Input */}
-    <div className="flex-1 relative">
-      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-      <input
-        type="tel"
-        name="phone"
-        required
-        value={formData.phone}
-        onChange={(e) => {
-          const val = e.target.value.replace(/\D/g, "");
-          setFormData({ ...formData, phone: val });
-        }}
-        className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-        placeholder="Enter phone number"
-        minLength={8}
-        maxLength={15}
-      />
-    </div>
-  </div>
-  
-  {/* Validation Helper */}
-  {formData.phone && formData.phone.length < 8 && (
-    <p className="text-xs text-red-500 mt-1">
-      Phone number must be at least 8 digits
-    </p>
-  )}
-</div>
+                        <div className="space-y-2 md:col-span-2">
+                          <label className="text-sm font-medium text-gray-700">
+                            Phone Number <span className="text-red-500">*</span>
+                          </label>
+
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <div className="w-full sm:w-44">
+                              <div className="relative">
+                                <select
+                                  value={formData.countryCode}
+                                  onChange={(e) =>
+                                    setFormData({
+                                      ...formData,
+                                      countryCode: e.target.value,
+                                    })
+                                  }
+                                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white appearance-none cursor-pointer hover:border-blue-400"
+                                  required
+                                >
+                                  <option value="" disabled>
+                                    🌐 Select Code *
+                                  </option>
+                                  <optgroup label="Popular Countries">
+                                    <option value="+91">🇮🇳 India (+91)</option>
+                                    <option value="+1">
+                                      🇺🇸 USA/Canada (+1)
+                                    </option>
+                                    <option value="+44">🇬🇧 UK (+44)</option>
+                                    <option value="+61">
+                                      🇦🇺 Australia (+61)
+                                    </option>
+                                  </optgroup>
+                                  <optgroup label="Asia">
+                                    <option value="+86">🇨🇳 China (+86)</option>
+                                    <option value="+81">🇯🇵 Japan (+81)</option>
+                                    <option value="+92">
+                                      🇵🇰 Pakistan (+92)
+                                    </option>
+                                    <option value="+94">
+                                      🇱🇰 Sri Lanka (+94)
+                                    </option>
+                                    <option value="+880">
+                                      🇧🇩 Bangladesh (+880)
+                                    </option>
+                                    <option value="+60">
+                                      🇲🇾 Malaysia (+60)
+                                    </option>
+                                    <option value="+65">
+                                      🇸🇬 Singapore (+65)
+                                    </option>
+                                    <option value="+62">
+                                      🇮🇩 Indonesia (+62)
+                                    </option>
+                                    <option value="+63">
+                                      🇵🇭 Philippines (+63)
+                                    </option>
+                                    <option value="+66">
+                                      🇹🇭 Thailand (+66)
+                                    </option>
+                                    <option value="+84">
+                                      🇻🇳 Vietnam (+84)
+                                    </option>
+                                  </optgroup>
+                                  <optgroup label="Middle East">
+                                    <option value="+971">🇦🇪 UAE (+971)</option>
+                                    <option value="+966">
+                                      🇸🇦 Saudi Arabia (+966)
+                                    </option>
+                                  </optgroup>
+                                  <optgroup label="Europe">
+                                    <option value="+49">
+                                      🇩🇪 Germany (+49)
+                                    </option>
+                                    <option value="+33">🇫🇷 France (+33)</option>
+                                    <option value="+7">🇷🇺 Russia (+7)</option>
+                                  </optgroup>
+                                  <optgroup label="Americas">
+                                    <option value="+55">🇧🇷 Brazil (+55)</option>
+                                  </optgroup>
+                                </select>
+                                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                              </div>
+                            </div>
+
+                            {/* Phone Number Input */}
+                            <div className="flex-1">
+                              <div className="relative">
+                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <input
+                                  type="tel"
+                                  name="phone"
+                                  required
+                                  value={formData.phone}
+                                  onChange={(e) => {
+                                    const val = e.target.value.replace(
+                                      /\D/g,
+                                      "",
+                                    );
+                                    if (val.length <= 15) {
+                                      setFormData({ ...formData, phone: val });
+                                    }
+                                  }}
+                                  className={`w-full pl-10 pr-4 py-3 rounded-lg border outline-none transition-all
+            ${
+              formData.phone && formData.phone.length < 10
+                ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                : "border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            }
+            ${
+              formData.phone && formData.phone.length >= 10
+                ? "border-green-300 bg-green-50/30"
+                : ""
+            }
+          `}
+                                  placeholder="Enter 10-digit mobile number"
+                                  inputMode="numeric"
+                                  pattern="[0-9]*"
+                                  maxLength={10}
+                                />
+
+                                {/* Status Icons */}
+                                {formData.phone &&
+                                  formData.phone.length > 0 && (
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                      {formData.phone.length === 10 ? (
+                                        <CheckCircle className="w-5 h-5 text-green-500" />
+                                      ) : formData.phone.length < 8 ? (
+                                        <AlertCircle className="w-5 h-5 text-red-400" />
+                                      ) : (
+                                        <Info className="w-5 h-5 text-amber-400" />
+                                      )}
+                                    </div>
+                                  )}
+                              </div>
+
+                              {/* Validation Messages */}
+                              {formData.phone && (
+                                <div className="mt-2 space-y-1">
+                                  {formData.phone.length > 0 &&
+                                    formData.phone.length < 8 && (
+                                      <p className="text-xs text-red-500 flex items-center gap-1">
+                                        <X className="w-3 h-3" />
+                                        Minimum 8 digits required
+                                      </p>
+                                    )}
+
+                                  {formData.phone.length >= 8 &&
+                                    formData.phone.length < 10 && (
+                                      <p className="text-xs text-amber-600 flex items-center gap-1">
+                                        <AlertCircle className="w-3 h-3" />
+                                        {10 - formData.phone.length} more
+                                        digit(s) needed
+                                      </p>
+                                    )}
+
+                                  {formData.phone.length === 10 && (
+                                    <p className="text-xs text-green-600 flex items-center gap-1">
+                                      <CheckCircle className="w-3 h-3" />
+                                      Valid phone number ✓
+                                    </p>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Helper Text */}
+                          <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                            <Info className="w-3 h-3" />
+                            <span>
+                              Enter without country code (e.g., 9876543210)
+                            </span>
+                          </div>
+                        </div>
                         {/* Date of Birth & Age */}
                         <div className="grid grid-cols-2 gap-4 md:col-span-2">
                           <div className="space-y-2">
                             <label className="text-sm font-medium text-gray-700">
-                              Date of Birth <span className="text-red-500">*</span>
+                              Date of Birth{" "}
+                              <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
                               <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -913,7 +1012,9 @@ const handleSubmit = async (e) => {
 
                     {/* Section 2: Location */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Location Details</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Location Details
+                      </h3>
                       <div className="grid md:grid-cols-3 gap-4">
                         {/* Country */}
                         <SearchableSelect
@@ -966,12 +1067,15 @@ const handleSubmit = async (e) => {
 
                     {/* Section 3: Academic Goals */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Academic Information</h3>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Academic Information
+                      </h3>
                       <div className="grid md:grid-cols-2 gap-4">
                         {/* Education Level */}
                         <div className="space-y-2">
                           <label className="text-sm font-medium text-gray-700">
-                            Current Education Level <span className="text-red-500">*</span>
+                            Current Education Level{" "}
+                            <span className="text-red-500">*</span>
                           </label>
                           <select
                             name="eduLevel"
@@ -992,7 +1096,8 @@ const handleSubmit = async (e) => {
                         {/* Domain */}
                         <div className="space-y-2">
                           <label className="text-sm font-medium text-gray-700">
-                            Interested Domain <span className="text-red-500">*</span>
+                            Interested Domain{" "}
+                            <span className="text-red-500">*</span>
                           </label>
                           <select
                             name="domain"
@@ -1013,7 +1118,8 @@ const handleSubmit = async (e) => {
                         {/* Course Selection */}
                         <div className="md:col-span-2 space-y-2">
                           <label className="text-sm font-medium text-gray-700">
-                            Interested Course <span className="text-red-500">*</span>
+                            Interested Course{" "}
+                            <span className="text-red-500">*</span>
                           </label>
                           <input
                             type="hidden"
@@ -1037,10 +1143,11 @@ const handleSubmit = async (e) => {
                                   onClick={() =>
                                     setFormData({ ...formData, course })
                                   }
-                                  className={`px-4 py-3 rounded-lg border text-sm font-medium transition-all text-left ${formData.course === course
+                                  className={`px-4 py-3 rounded-lg border text-sm font-medium transition-all text-left ${
+                                    formData.course === course
                                       ? "bg-blue-600 border-blue-600 text-white"
                                       : "bg-white border-gray-300 text-gray-700 hover:border-blue-500"
-                                    }`}
+                                  }`}
                                 >
                                   {course}
                                 </button>
@@ -1086,13 +1193,14 @@ const handleSubmit = async (e) => {
                           !formData.domain ||
                           !formData.course
                         }
-                        className={`w-full md:w-auto px-8 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${isLoading ||
-                            !formData.eduLevel ||
-                            !formData.domain ||
-                            !formData.course
+                        className={`w-full md:w-auto px-8 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${
+                          isLoading ||
+                          !formData.eduLevel ||
+                          !formData.domain ||
+                          !formData.course
                             ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                             : "bg-blue-600 text-white hover:bg-blue-700"
-                          }`}
+                        }`}
                       >
                         {isLoading ? (
                           <>
@@ -1120,20 +1228,27 @@ const handleSubmit = async (e) => {
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-4">SS Admission Wala</h2>
               <p className="text-gray-400 max-w-2xl mx-auto mb-8">
-                Your trusted partner for career guidance and admission counseling since 2012.
+                Your trusted partner for career guidance and admission
+                counseling since 2012.
               </p>
 
               <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">9+</div>
+                  <div className="text-3xl font-bold text-blue-400 mb-2">
+                    9+
+                  </div>
                   <div className="text-gray-300">Years Experience</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">15k+</div>
+                  <div className="text-3xl font-bold text-blue-400 mb-2">
+                    15k+
+                  </div>
                   <div className="text-gray-300">Students Guided</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">500+</div>
+                  <div className="text-3xl font-bold text-blue-400 mb-2">
+                    500+
+                  </div>
                   <div className="text-gray-300">Partner Colleges</div>
                 </div>
               </div>

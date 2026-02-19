@@ -1,4 +1,4 @@
-require("dotenv").config();
+const dotenv = require('dotenv');
 const app = require("./src/app");
 const morgan = require("morgan");
 const connectDB = require("./src/config/db"); 
@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 app.use(morgan(":method :url :status :response-time ms - :date[clf]"));
-
+  
 
 app.listen(PORT, () => {
   console.log(`
